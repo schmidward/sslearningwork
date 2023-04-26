@@ -1,13 +1,13 @@
-package com.ericdschmid.springsecuritybasic;
+package com.ericdschmid.SecurityBackendApplication;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class SpringsecuritybasicApplication {
+public class SecurityBackendApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(SpringsecuritybasicApplication.class, args);
+		SpringApplication.run(SecurityBackendApplication.class, args);
 	}
 
 }
