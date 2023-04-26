@@ -4,10 +4,10 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-public class HomeController {
+public class CardsController {
 
-    @GetMapping("/home")
-    public String sayHello(){
-        return "Welcome to this Spring Application with out Security";
+    @GetMapping("/myCards")
+    public String getCardsDetails() {
+        return "Here are the cards details from the DB";
     }
 }
