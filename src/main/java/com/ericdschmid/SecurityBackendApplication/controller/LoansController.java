@@ -8,6 +8,7 @@ public class LoansController {
 
     @GetMapping("/myLoans")
     public String getLoanDetails() {
+        System.out.println("\n*** USER GET request for loans details");
         return "Here are the loan details from the DB";
     }
 

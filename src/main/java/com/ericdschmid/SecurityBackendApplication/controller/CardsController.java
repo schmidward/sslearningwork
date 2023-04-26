@@ -8,6 +8,7 @@ public class CardsController {
 
     @GetMapping("/myCards")
     public String getCardsDetails() {
+        System.out.println("\n*** USER GET request for cards details");
         return "Here are the cards details from the DB";
     }
 }
