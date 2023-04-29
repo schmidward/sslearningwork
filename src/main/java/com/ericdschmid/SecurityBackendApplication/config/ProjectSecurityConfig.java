@@ -24,7 +24,7 @@ public class ProjectSecurityConfig {
         return http.build();
     }
 
-    //jdbcUserDetailsManager only works for applications that use the same schema structure as Spring Security framework (like what is set up in the SQL file)
+    //jdbcUserDetailsManager only works for applications that use the same schema structure as Spring Security framework (like what is set up in the SQL file. the users and the authorities)
     @Bean
     public UserDetailsService userDetailsService(DataSource dataSource) {
         return new JdbcUserDetailsManager(dataSource);
