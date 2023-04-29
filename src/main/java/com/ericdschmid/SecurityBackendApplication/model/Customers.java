@@ -4,13 +4,16 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import org.hibernate.annotations.GenericGenerator;
 
 //This is creating the model for the customers table inside the database
 @Entity
 public class Customers {
     //All of these fields match what is in the customers table created in the db
+    //The generated value annotations need the "native" things in them so that only the backend database will worry about id value generation
     @Id
-    @GeneratedValue(strategy= GenerationType.AUTO)
+    @GeneratedValue(strategy= GenerationType.AUTO, generator="native")
+    @GenericGenerator(name = "native",strategy = "native")
     private int id;
     private String email;
     private String pwd;
