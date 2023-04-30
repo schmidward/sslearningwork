@@ -8,7 +8,7 @@ import org.hibernate.annotations.GenericGenerator;
 
 //This is creating the model for the customers table inside the database
 @Entity
-public class Customers {
+public class Customer {
     //All of these fields match what is in the customers table created in the db
     //The generated value annotations need the "native" things in them so that only the backend database will worry about id value generation
     @Id

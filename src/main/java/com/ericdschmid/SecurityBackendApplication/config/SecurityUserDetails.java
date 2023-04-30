@@ -1,8 +1,7 @@
 package com.ericdschmid.SecurityBackendApplication.config;
 
-import com.ericdschmid.SecurityBackendApplication.model.Customers;
-import com.ericdschmid.SecurityBackendApplication.repository.CustomersRepository;
-import org.aspectj.apache.bcel.classfile.Module;
+import com.ericdschmid.SecurityBackendApplication.model.Customer;
+import com.ericdschmid.SecurityBackendApplication.repository.CustomerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -20,7 +19,7 @@ import java.util.List;
 public class SecurityUserDetails implements UserDetailsService {
     //Since this depends on the custom repository, we need to have it be autowired here
     @Autowired
-    CustomersRepository customersRepository;
+    CustomerRepository customerRepository;
 
     //This override MUST be present because of the implementation
     @Override
@@ -34,7 +33,7 @@ public class SecurityUserDetails implements UserDetailsService {
 
         //This calls the findByEmail from the CustomerRepository interface. The username the end user is passing is the input for this method and executes the SQL scripts
         //the given database. And it will give the list of customers details with the given input
-        List<Customers> customers = customersRepository.findByEmail(username);
+        List<Customer> customers = customerRepository.findByEmail(username);
         if (customers.size() == 0) {
             throw new UsernameNotFoundException("User details not found for the user: " + username);
         } else {

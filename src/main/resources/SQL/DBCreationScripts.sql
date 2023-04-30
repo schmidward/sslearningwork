@@ -1,6 +1,6 @@
-CREATE database ericdschmid;
+CREATE database springsecurity;
 
-use ericdschmid;
+use springsecurity;
 
 CREATE TABLE users (
 id INT NOT NULL AUTO_INCREMENT,
@@ -16,7 +16,7 @@ authority VARCHAR(45) NOT NULL,
 PRIMARY KEY (id));
 
 -- Creating new tables for custom columns for authentication. Caveat is in this scenario we can't use jdbc details manager. Need own logic
-CREATE TABLE customers (
+CREATE TABLE customer (
 id INT NOT NULL AUTO_INCREMENT,
 email VARCHAR(45) NOT NULL,
 pwd VARCHAR(200) NOT NULL,
