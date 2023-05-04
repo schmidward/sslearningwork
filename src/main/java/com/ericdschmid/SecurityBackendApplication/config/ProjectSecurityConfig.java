@@ -21,7 +21,7 @@ public class ProjectSecurityConfig {
 
         //csrf disabled here to make basic things work for now. Will need to properly implement into the future
         http.csrf().disable()
-                .authorizeHttpRequests().requestMatchers("/myAccount", "/myBalance", "/myCards", "/myLoans").authenticated()
+                .authorizeHttpRequests().requestMatchers("/myAccount", "/myBalance", "/myCards", "/myLoans", "/user").authenticated()
                 .requestMatchers("/notices", "/contact", "/register").permitAll()
                 .and().formLogin()
                 .and().httpBasic();
