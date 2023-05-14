@@ -1,5 +1,6 @@
 package com.ericdschmid.SecurityBackendApplication.config;
 
+import com.ericdschmid.SecurityBackendApplication.model.Authority;
 import com.ericdschmid.SecurityBackendApplication.model.Customer;
 import com.ericdschmid.SecurityBackendApplication.repository.CustomerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +16,8 @@ import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
+
 @Component
 public class SecurityUsernamePwdAuthenticationProvider implements AuthenticationProvider {
 
@@ -34,15 +37,23 @@ public class SecurityUsernamePwdAuthenticationProvider implements Authentication
         List<Customer> customer = customerRepository.findByEmail(username);
         if (customer.size() > 0) {
             if (passwordEncoder.matches(pwd, customer.get(0).getPwd())) {
-                List<GrantedAuthority> authorities = new ArrayList<>();
-                authorities.add(new SimpleGrantedAuthority(customer.get(0).getRole()));
-                return new UsernamePasswordAuthenticationToken(username, pwd, authorities);
+                return new UsernamePasswordAuthenticationToken(username, pwd, getGrantedAuthorities(customer.get(0).getAuthorities()));
             } else {
                 throw new BadCredentialsException("Invalid credentials");
             }
         } else {
             throw new BadCredentialsException("No User registered with these details.");
         }
+    }
+
+    //Helper method takes the authorities from the backend database and read the name from the authority db
+    // and then create a new authority around it
+    private List<GrantedAuthority> getGrantedAuthorities(Set<Authority> authorities) {
+        List<GrantedAuthority> grantedAuthorities = new ArrayList<>();
+        for (Authority authority : authorities) {
+            grantedAuthorities.add(new SimpleGrantedAuthority(authority.getName()));
+        }
+        return grantedAuthorities;
     }
 
     @Override

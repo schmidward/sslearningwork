@@ -48,20 +48,23 @@ public class  ProjectSecurityConfig {
                     }
                 })
                 .and().csrf((csrf) -> csrf.csrfTokenRequestHandler(requestHandler).ignoringRequestMatchers("/contact", "/register")
-                        .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse()))
-                .addFilterAfter(new CsrfCookieFilter(), BasicAuthenticationFilter.class)
-                .authorizeHttpRequests().requestMatchers("/myAccount", "/myBalance", "/myCards", "/myLoans", "/user").authenticated()
-                .requestMatchers("/notices", "/contact", "/register").permitAll()
+                    .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse()))
+                    .addFilterAfter(new CsrfCookieFilter(), BasicAuthenticationFilter.class)
+                .authorizeHttpRequests()
+//                    .requestMatchers("/myAccount").hasAuthority("VIEWACCOUNT")
+//                    .requestMatchers("/myBalance").hasAnyAuthority("VIEWACCOUNT", "VIEWBALANCE")
+//                    .requestMatchers("/myLoans").hasAuthority("VIEWLOANS")
+//                    .requestMatchers("/myCards").hasAuthority("VIEWCARDS")
+                    .requestMatchers("/myAccount").hasRole("USER")
+                    .requestMatchers("/myBalance").hasAnyRole("USER", "ADMIN")
+                    .requestMatchers("/myLoans").hasRole("USER")
+                    .requestMatchers("/myCards").hasRole("USER")
+                    .requestMatchers("/user").authenticated()
+                    .requestMatchers("/notices", "/contact", "/register").permitAll()
                 .and().formLogin()
                 .and().httpBasic();
         return http.build();
     }
-
-    //jdbcUserDetailsManager only works for applications that use the same schema structure as Spring Security framework (like what is set up in the SQL file. the users and the authorities)
-//    @Bean
-//    public UserDetailsService userDetailsService(DataSource dataSource) {
-//        return new JdbcUserDetailsManager(dataSource);
-//    }
 
     //This method is MANDATORY
     //NoOpPasswordEncoder is saying this is still plain text passwords
