@@ -1,5 +1,6 @@
 package com.ericdschmid.SecurityBackendApplication.config;
 
+import com.ericdschmid.SecurityBackendApplication.filter.AuthoritiesLoggingAfterFilter;
 import com.ericdschmid.SecurityBackendApplication.filter.CsrfCookieFilter;
 import com.ericdschmid.SecurityBackendApplication.filter.RequestValidationBeforeFilter;
 import jakarta.servlet.http.HttpServletRequest;
@@ -53,6 +54,7 @@ public class  ProjectSecurityConfig {
                     .addFilterAfter(new CsrfCookieFilter(), BasicAuthenticationFilter.class)
                     // Putting in the filter and then the second parameter is what comes after it... like where you want to inject it in the chain
                     .addFilterBefore(new RequestValidationBeforeFilter(), BasicAuthenticationFilter.class)
+                    .addFilterAfter(new AuthoritiesLoggingAfterFilter(), BasicAuthenticationFilter.class)
                 .authorizeHttpRequests()
                     .requestMatchers("/myAccount").hasRole("USER")
                     .requestMatchers("/myBalance").hasAnyRole("USER", "ADMIN")
