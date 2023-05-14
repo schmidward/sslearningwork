@@ -1,6 +1,7 @@
 package com.ericdschmid.SecurityBackendApplication.config;
 
 import com.ericdschmid.SecurityBackendApplication.filter.AuthoritiesLoggingAfterFilter;
+import com.ericdschmid.SecurityBackendApplication.filter.AuthoritiesLoggingAtFilter;
 import com.ericdschmid.SecurityBackendApplication.filter.CsrfCookieFilter;
 import com.ericdschmid.SecurityBackendApplication.filter.RequestValidationBeforeFilter;
 import jakarta.servlet.http.HttpServletRequest;
@@ -53,7 +54,9 @@ public class  ProjectSecurityConfig {
                     .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse()))
                     .addFilterAfter(new CsrfCookieFilter(), BasicAuthenticationFilter.class)
                     // Putting in the filter and then the second parameter is what comes after it... like where you want to inject it in the chain
+                    //THE MAJORITY OF PROJECTS USE ADD FILTER BEFORE OR AFTER
                     .addFilterBefore(new RequestValidationBeforeFilter(), BasicAuthenticationFilter.class)
+                    .addFilterAt(new AuthoritiesLoggingAtFilter(), BasicAuthenticationFilter.class)
                     .addFilterAfter(new AuthoritiesLoggingAfterFilter(), BasicAuthenticationFilter.class)
                 .authorizeHttpRequests()
                     .requestMatchers("/myAccount").hasRole("USER")
