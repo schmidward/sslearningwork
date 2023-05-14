@@ -1,15 +1,29 @@
 package com.ericdschmid.SecurityBackendApplication.controller;
 
+import com.ericdschmid.SecurityBackendApplication.model.AccountTransactions;
+import com.ericdschmid.SecurityBackendApplication.repository.AccountTransactionsRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
 
 @RestController
 public class BalanceController {
 
+    @Autowired
+    private AccountTransactionsRepository accountTransactionsRepository;
+
     @GetMapping("/myBalance")
-    public String getBalanceDetails() {
+    public List<AccountTransactions> getBalanceDetails(@RequestParam int id) {
         System.out.println("\n*** USER GET request for balance details");
-        return "Here are the balance details from the DB";
+        List<AccountTransactions> accountTransactions = accountTransactionsRepository.findByCustomerIdOrderByTransactionDtDesc(id);
+        if (accountTransactions != null) {
+            return accountTransactions;
+        } else {
+            return null;
+        }
     }
 
 }
