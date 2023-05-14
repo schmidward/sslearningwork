@@ -1,6 +1,7 @@
 package com.ericdschmid.SecurityBackendApplication.config;
 
 import com.ericdschmid.SecurityBackendApplication.filter.CsrfCookieFilter;
+import com.ericdschmid.SecurityBackendApplication.filter.RequestValidationBeforeFilter;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -50,11 +51,9 @@ public class  ProjectSecurityConfig {
                 .and().csrf((csrf) -> csrf.csrfTokenRequestHandler(requestHandler).ignoringRequestMatchers("/contact", "/register")
                     .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse()))
                     .addFilterAfter(new CsrfCookieFilter(), BasicAuthenticationFilter.class)
+                    // Putting in the filter and then the second parameter is what comes after it... like where you want to inject it in the chain
+                    .addFilterBefore(new RequestValidationBeforeFilter(), BasicAuthenticationFilter.class)
                 .authorizeHttpRequests()
-//                    .requestMatchers("/myAccount").hasAuthority("VIEWACCOUNT")
-//                    .requestMatchers("/myBalance").hasAnyAuthority("VIEWACCOUNT", "VIEWBALANCE")
-//                    .requestMatchers("/myLoans").hasAuthority("VIEWLOANS")
-//                    .requestMatchers("/myCards").hasAuthority("VIEWCARDS")
                     .requestMatchers("/myAccount").hasRole("USER")
                     .requestMatchers("/myBalance").hasAnyRole("USER", "ADMIN")
                     .requestMatchers("/myLoans").hasRole("USER")
