@@ -1,9 +1,6 @@
 package com.ericdschmid.SecurityBackendApplication.config;
 
-import com.ericdschmid.SecurityBackendApplication.filter.AuthoritiesLoggingAfterFilter;
-import com.ericdschmid.SecurityBackendApplication.filter.AuthoritiesLoggingAtFilter;
-import com.ericdschmid.SecurityBackendApplication.filter.CsrfCookieFilter;
-import com.ericdschmid.SecurityBackendApplication.filter.RequestValidationBeforeFilter;
+import com.ericdschmid.SecurityBackendApplication.filter.*;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -22,6 +19,7 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 
 import javax.sql.DataSource;
+import java.util.Arrays;
 import java.util.Collections;
 
 @Configuration
@@ -35,9 +33,8 @@ public class  ProjectSecurityConfig {
         // Invoking something like "/myAccount/**" means any kind of page with the root /myAccount will be secured
 
 
-        //This configuration says "please create the session id based on the configuration that is present here"
-        http.securityContext().requireExplicitSave(false) // <- This says store the JSession ID on the framework side of things
-                .and().sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.ALWAYS))
+        //The STATELESS says "I'm going to take care of everything by myself. Don't make JSESSIONID or whatever
+        http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
                 .cors().configurationSource(new CorsConfigurationSource() {
                     @Override
                     public CorsConfiguration getCorsConfiguration(HttpServletRequest request) {
@@ -46,6 +43,7 @@ public class  ProjectSecurityConfig {
                         configuration.setAllowedMethods(Collections.singletonList("*"));
                         configuration.setAllowCredentials(true);
                         configuration.setAllowedHeaders(Collections.singletonList("*"));
+                        configuration.setExposedHeaders(Arrays.asList("Authorization")); //A header that needs to be passed to the frontend
                         configuration.setMaxAge(3600L);
                         return configuration;
                     }
@@ -58,6 +56,7 @@ public class  ProjectSecurityConfig {
                     .addFilterBefore(new RequestValidationBeforeFilter(), BasicAuthenticationFilter.class)
                     .addFilterAt(new AuthoritiesLoggingAtFilter(), BasicAuthenticationFilter.class)
                     .addFilterAfter(new AuthoritiesLoggingAfterFilter(), BasicAuthenticationFilter.class)
+                    .addFilterAfter(new JWTTokenGeneratorFilter(), BasicAuthenticationFilter.class)
                 .authorizeHttpRequests()
                     .requestMatchers("/myAccount").hasRole("USER")
                     .requestMatchers("/myBalance").hasAnyRole("USER", "ADMIN")

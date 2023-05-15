@@ -40,7 +40,7 @@ public class RequestValidationBeforeFilter implements Filter {
                     String email = token.substring(0, delim);
                     if (email.toLowerCase().contains("test")) {
                         res.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-                        return
+                        return;
                     }
                 } catch (IllegalArgumentException e) {
                     throw new BadCredentialsException("Failed to decode basic authentication token");
@@ -48,5 +48,6 @@ public class RequestValidationBeforeFilter implements Filter {
             }
         }
         chain.doFilter(request, response);
+    }
     }
 }
